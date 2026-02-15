@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Schritte</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #222;
+      --text-primary: #fff;
+      --text-secondary: #888;
+      --accent: #fff;
+      --accent-dim: #444;
+      --success: #4ade80;
+      --radius: 0px;
+    }
+
+    body {
+      font-family: 'Archivo', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    .container {
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 0 20px 100px;
+    }
+
+    header {
+      padding: 40px 0 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      color: var(--text-secondary);
+    }
+
+    .hero {
+      padding: 60px 0 40px;
+      position: relative;
+    }
+
+    .steps-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .steps-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 40px 0;
+      animation: fadeIn 0.8s ease 0.2s both;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: var(--accent-dim);
+      transform: translateY(-2px);
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .stat-unit {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 300;
+    }
+
+    .progress-section {
+      margin: 40px 0;
+      animation: fadeIn 1s ease 0.4s both;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .progress-title {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 300;
+    }
+
+    .progress-percent {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text-primary);
+    }
+
+    .progress-bar {
+      height: 2px;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+    }
+
+    .history-section {
+      margin: 60px 0 40px;
+      animation: fadeIn 1.2s ease 0.6s both;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 300;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .history-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      opacity: 0;
+      animation: slideUp 0.4s ease forwards;
+    }
+
+    .history-item:nth-child(1) { animation-delay: 0.1s; }
+    .history-item:nth-child(2) { animation-delay: 0.15s; }
+    .history-item:nth-child(3) { animation-delay: 0.2s; }
+    .history-item:nth-child(4) { animation-delay: 0.25s; }
+    .history-item:nth-child(5) { animation-delay: 0.3s; }
+    .history-item:nth-child(6) { animation-delay: 0.35s; }
+    .history-item:nth-child(7) { animation-delay: 0.4s; }
+
+    .history-item:hover {
+      background: #1a1a1a;
+      border-color: var(--accent-dim);
+    }
+
+    .history-date {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 300;
+    }
+
+    .history-steps {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .history-badge {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 10px;
+      color: var(--success);
+      opacity: 0.8;
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 20px;
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: 'Archivo', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: lowercase;
+      letter-spacing: -0.01em;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+      font-weight: 500;
+    }
+
+    .btn-primary:hover {
+      background: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      max-width: 400px;
+      width: 100%;
+      padding: 32px;
+      animation: slideUp 0.3s ease;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 400;
+      margin-bottom: 24px;
+      letter-spacing: -0.01em;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      font-weight: 300;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 300;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-secondary);
+      animation: pulse 2s ease infinite;
+    }
+
+    .status-dot.active {
+      background: var(--success);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>schritte</h1>
+    </header>
+
+    <div class="hero">
+      <div class="steps-display" id="currentSteps">0</div>
+      <div class="steps-label">heute</div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-header">
+        <div class="progress-title">tagesziel</div>
+        <div class="progress-percent" id="progressPercent">0%</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">
+          <span id="distance">0.0</span>
+          <span class="stat-unit">km</span>
+        </div>
+        <div class="stat-label">Distanz</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">
+          <span id="calories">0</span>
+          <span class="stat-unit">kcal</span>
+        </div>
+        <div class="stat-label">Kalorien</div>
+      </div>
+    </div>
+
+    <div class="history-section">
+      <div class="section-header">
+        <div class="section-title">Verlauf</div>
+        <div class="section-title" id="goalDisplay">Ziel: 8000</div>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="empty-state">Noch keine Daten vorhanden</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="settingsBtn">einstellungen</button>
+    <button class="btn btn-primary" id="startBtn">schritte eingeben</button>
+  </div>
+
+  <div class="modal" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-title">Einstellungen</div>
+      <div class="form-group">
+        <label class="form-label">Tagesziel (Schritte)</label>
+        <input type="number" class="form-input" id="goalInput" value="8000" min="1000" step="1000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Körpergewicht (kg)</label>
+        <input type="number" class="form-input" id="weightInput" value="81" min="30" max="200">
+      </div>
+      <div class="modal-actions">
+        <button class="btn" id="cancelBtn">abbrechen</button>
+        <button class="btn btn-primary" id="saveBtn">speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class StepTracker {
+      constructor() {
+        this.steps = 0;
+        this.dailyGoal = 8000;
+        this.weight = 81;
+        
+        this.init();
+      }
+
+      async init() {
+        await this.loadSettings();
+        await this.loadTodaySteps();
+        this.loadHistory();
+        this.updateDisplay();
+        this.setupEventListeners();
+      }
+
+      async loadSettings() {
+        try {
+          const goalResult = await window.storage.get('daily_goal', false);
+          if (goalResult) {
+            this.dailyGoal = parseInt(goalResult.value);
+          }
+          
+          const weightResult = await window.storage.get('user_weight', false);
+          if (weightResult) {
+            this.weight = parseInt(weightResult.value);
+          }
+          
+          document.getElementById('goalInput').value = this.dailyGoal;
+          document.getElementById('weightInput').value = this.weight;
+          document.getElementById('goalDisplay').textContent = `Ziel: ${this.dailyGoal.toLocaleString('de-DE')}`;
+        } catch (error) {
+          console.log('Using default settings');
+        }
+      }
+
+      async saveSettings() {
+        const goal = parseInt(document.getElementById('goalInput').value);
+        const weight = parseInt(document.getElementById('weightInput').value);
+        
+        try {
+          await window.storage.set('daily_goal', goal.toString(), false);
+          await window.storage.set('user_weight', weight.toString(), false);
+          
+          this.dailyGoal = goal;
+          this.weight = weight;
+          
+          document.getElementById('goalDisplay').textContent = `Ziel: ${this.dailyGoal.toLocaleString('de-DE')}`;
+          this.updateDisplay();
+          this.closeModal();
+        } catch (error) {
+          console.error('Failed to save settings:', error);
+          alert('Einstellungen konnten nicht gespeichert werden');
+        }
+      }
+
+      async loadTodaySteps() {
+        const today = new Date().toISOString().split('T')[0];
+        try {
+          const result = await window.storage.get(`steps_${today}`, false);
+          if (result) {
+            this.steps = parseInt(result.value);
+          }
+        } catch (error) {
+          console.log('No steps for today yet');
+        }
+      }
+
+      async saveTodaySteps() {
+        const today = new Date().toISOString().split('T')[0];
+        try {
+          await window.storage.set(`steps_${today}`, this.steps.toString(), false);
+        } catch (error) {
+          console.error('Failed to save steps:', error);
+        }
+      }
+
+      async loadHistory() {
+        try {
+          const result = await window.storage.list('steps_', false);
+          if (!result || !result.keys || result.keys.length === 0) {
+            return;
+          }
+
+          const historyData = [];
+          for (const key of result.keys) {
+            try {
+              const stepResult = await window.storage.get(key, false);
+              if (stepResult) {
+                const date = key.replace('steps_', '');
+                historyData.push({
+                  date: date,
+                  steps: parseInt(stepResult.value)
+                });
+              }
+            } catch (error) {
+              console.log(`Could not load ${key}`);
+            }
+          }
+
+          historyData.sort((a, b) => new Date(b.date) - new Date(a.date));
+          this.displayHistory(historyData.slice(0, 7));
+        } catch (error) {
+          console.log('No history available');
+        }
+      }
+
+      displayHistory(data) {
+        const historyList = document.getElementById('historyList');
+        
+        if (data.length === 0) {
+          historyList.innerHTML = '<div class="empty-state">Noch keine Daten vorhanden</div>';
+          return;
+        }
+
+        historyList.innerHTML = data.map(item => {
+          const date = new Date(item.date);
+          const formatted = date.toLocaleDateString('de-DE', { 
+            day: '2-digit', 
+            month: 'short',
+            year: 'numeric'
+          });
+          
+          const goalReached = item.steps >= this.dailyGoal;
+          const badge = goalReached ? '<span class="history-badge">✓</span>' : '';
+          
+          return `
+            <div class="history-item">
+              <div class="history-date">${formatted}</div>
+              <div class="history-steps">${item.steps.toLocaleString('de-DE')}${badge}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      setupEventListeners() {
+        document.getElementById('startBtn').addEventListener('click', () => this.openInputModal());
+        document.getElementById('settingsBtn').addEventListener('click', () => this.openModal());
+        document.getElementById('cancelBtn').addEventListener('click', () => this.closeModal());
+        document.getElementById('saveBtn').addEventListener('click', () => this.saveSettings());
+      }
+
+      openModal() {
+        document.getElementById('settingsModal').classList.add('active');
+      }
+
+      closeModal() {
+        document.getElementById('settingsModal').classList.remove('active');
+      }
+
+      openInputModal() {
+        const currentSteps = this.steps;
+        const input = prompt('Schritte für heute eingeben:', currentSteps);
+        
+        if (input !== null && input !== '') {
+          const newSteps = parseInt(input);
+          if (!isNaN(newSteps) && newSteps >= 0) {
+            this.steps = newSteps;
+            this.updateDisplay();
+            this.saveTodaySteps();
+            this.loadHistory();
+          } else {
+            alert('Bitte eine gültige Zahl eingeben');
+          }
+        }
+      }
+
+      updateDisplay() {
+        document.getElementById('currentSteps').textContent = this.steps.toLocaleString('de-DE');
+        
+        // Schrittlänge basierend auf Körpergröße 189cm: ca. 78cm pro Schritt
+        const distance = (this.steps * 0.78 / 1000).toFixed(1);
+        document.getElementById('distance').textContent = distance;
+        
+        const calories = Math.round(this.steps * 0.04 * (this.weight / 81));
+        document.getElementById('calories').textContent = calories;
+        
+        const progress = Math.min((this.steps / this.dailyGoal) * 100, 100);
+        document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+      }
+    }
+
+    window.addEventListener('load', () => {
+      const tracker = new StepTracker();
+    });
+  </script>
+</body>
+</html>
